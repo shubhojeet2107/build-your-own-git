@@ -60,6 +60,7 @@ public class Main {
            byte[] compressedBytes = Files.readAllBytes(objectPath);
 
            // 3) Decompress the bytes using java built-in Inflater (ZLIB)
+           // creating an inflater object
            Inflater inflater = new Inflater();
            inflater.setInput(compressedBytes);
            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
