@@ -1,0 +1,7 @@
+How to run the program:
+
+for case 1: (init)
+go to Main at top right -> edit configuration -> program arguments -> write "init"
+
+for case 2: (cat-file)
+open the intelliJ terminal(This opens a command line that is already in your project's root directory.) -> Create a Test File, write this command <echo "testing from inside IntelliJ" > new_test_file.txt> -> Create the Git Object and Get its Hash <git hash-object -w new_test_file.txt> -> This will print a brand new 40-character hash. Select and copy this new hash -> go to Main at top right -> edit configuration -> program arguments -> write "cat-file -p <your_new_hash_here>"
