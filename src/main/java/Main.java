@@ -60,29 +60,43 @@ public class Main {
            byte[] compressedBytes = Files.readAllBytes(objectPath);
 
            // 3) Decompress the bytes using java built-in Inflater (ZLIB)
-           // creating an inflater object
+           //  Create a new Inflater object, which is Java's engine for decompressing ZLIB data
            Inflater inflater = new Inflater();
+           // Give the inflater the compressed data it needs to work on.
            inflater.setInput(compressedBytes);
+           // Create a flexible, in-memory "bucket" to hold the decompressed data as it's processed.
            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+           // Create a small, temporary buffer (like a cup) to hold chunks of decompressed data.
            byte[] buffer = new byte[1024];
+           // Loop as long as there is more compressed data to process
            while(!inflater.finished()){
+             // Decompress a chunk of data, fill our buffer with it, and get the number of bytes written.
              int count = inflater.inflate(buffer);
+             // Write the valid chunk of data from the buffer into our main output "bucket".
              outputStream.write(buffer, 0, count);
            }
            inflater.end();
+           // Get the final, complete decompressed data from the output stream as a single byte array.
            byte[] decompressedBytes = outputStream.toByteArray();
 
            // 4) Find the null-byte separator between the header and content
+           // Create a variable to store the position of the null-byte, initializing it to -1
            int nullByteIndex = -1;
+           // Loop through every single byte of the decompressed data, one by one.
            for(int i=0; i<decompressedBytes.length; i++){
+             // Check if the current byte is the null byte separator (represented by the value 0).
              if (decompressedBytes[i] == 0) {
+               // If it is, save its position (index).
                nullByteIndex = i;
+               // Stop the loop immediately, since we've found the first separator.
                break;
              }
            }
 
            // 5) Extract the content after the separator and print it
+           // Create a new String using only the part of the byte array *after* the null-byte separator.
            String content = new String(decompressedBytes, nullByteIndex + 1, decompressedBytes.length - (nullByteIndex + 1));
+           // Print the final content to the console without adding an extra newline at the end.
            System.out.print(content);
 
          } catch (java.nio.file.NoSuchFileException e) {
