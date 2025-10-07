@@ -3,58 +3,62 @@
 This is a starting point for Java solutions to the
 ["Build Your Own Git" Challenge](https://codecrafters.io/challenges/git).
 
-In this challenge, you'll build a small Git implementation that's capable of
-initializing a repository, creating commits and cloning a public repository.
-Along the way we'll learn about the `.git` directory, Git objects (blobs,
-commits, trees etc.), Git's transfer protocols and more.
+# Build Your Own Git (in Java)
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+This project is a custom implementation of the Git version control system, built from scratch in Java. The primary goal is to gain a deeper understanding of Git's internal architecture, including its object model, content-addressable storage, and core commands.
 
-# Passing the first stage
+This repository is my implementation of the popular ["Build Your Own Git"](https://codecrafters.io/challenges/git) challenge by Codecrafters.
 
-The entry point for your Git implementation is in `src/main/java/Main.java`.
-Study and uncomment the relevant code, and push your changes to pass the first
-stage:
+---
 
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
-```
+## Implemented Features
 
-That's all!
+So far, this project supports the following Git commands:
 
-# Stage 2 & beyond
+* **`init`**: Creates the `.git` directory with its essential `objects` and `refs` subdirectories to initialize a new repository.
+* **`cat-file`**: Reads and decompresses a Git "blob" object from the `.git/objects` database to display its content.
+* **`hash-object`**: Computes the SHA-1 hash for a file, creates a "blob" object with the correct header, and optionally writes it to the object database.
 
-Note: This section is for stages 2 and beyond.
+---
 
-1. Ensure you have `mvn` installed locally
-1. Run `./your_program.sh` to run your Git implementation, which is implemented
-   in `src/main/java/Main.java`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+## How to Run & Test
 
-# Testing locally
+You can run the different commands by changing the program arguments in the IntelliJ Run Configuration.
 
-The `your_program.sh` script is expected to operate on the `.git` folder inside
-the current working directory. If you're running this inside the root of this
-repository, you might end up accidentally damaging your repository's `.git`
-folder.
+### Initializing the Repository (`init`)
+1.  In IntelliJ, go to **Run > Edit Configurations...**.
+2.  In the **Program arguments** field, type:
+    ```
+    init
+    ```
+3.  Click **Apply**, then **OK**, and run the program.
 
-We suggest executing `your_program.sh` in a different folder when testing
-locally. For example:
+### Inspecting an Object (`cat-file`)
+To test the `cat-file` command, you first need a valid Git object to inspect.
 
-```sh
-mkdir -p /tmp/testing && cd /tmp/testing
-/path/to/your/repo/your_program.sh init
-```
+1.  **Create a test object:** Open the IntelliJ Terminal and run the following commands:
+    ```bash
+    # Create a sample file
+    echo "hello world" > test.txt
 
-To make this easier to type out, you could add a
-[shell alias](https://shapeshed.com/unix-alias/):
+    # Create a git object from the file and get its hash
+    git hash-object -w test.txt
+    ```
+2.  **Copy the hash:** The `hash-object` command will output a 40-character hash. Copy this hash.
 
-```sh
-alias mygit=/path/to/your/repo/your_program.sh
+3.  **Update Run Configuration:** Go back to **Run > Edit Configurations...**.
 
-mkdir -p /tmp/testing && cd /tmp/testing
-mygit init
-```
+4.  **Set Program Arguments:** In the **Program arguments** field, type the following, replacing `<paste_your_hash_here>` with the hash you just copied:
+    ```
+    cat-file -p <paste_your_hash_here>
+    ```
+5.  **Run:** Click **Apply**, then **OK**, and run the program. The output should be `hello world`.
+
+### Creating an Object (`hash-object`)
+You can test both hashing and writing an object.
+
+1.  **Update Run Configuration:** Go to **Run > Edit Configurations...**.
+2.  **Set Program Arguments:**
+    * To only get the hash: `hash-object test.txt`
+    * To get the hash **and** write the object to the database: `hash-object -w test.txt`
+3.  **Run:** Click **Apply**, then **OK**, and run the program. /tmp/testing
